@@ -4,7 +4,7 @@
 [ ! -z $3 ] && CONTAINERS_AMOUNT=$3 || { echo "No containers amount specified. Using only one"; CONTAINERS_AMOUNT=1; }
 [ ! -z $4 ] && INITIAL_IP=$4 || { echo "No initial network address specified. Assuming 10.11.12.0/24"; INITIAL_IP="10.11.12.0"; }
 
-[[ $(docker images | grep "cellframevpn2.*latest") ]] || docker build -f /home/mrmoon/cellframevpn.dockerfile -t cellframevpn2:latest /home/mrmoon/tmpfolder/
+[[ $(docker images | grep "cellframevpn.*latest") ]] || docker build -f ../cellframevpn.dockerfile -t cellframevpn:latest ../tmpfolder/
 
 WORKPORT_BEGIN=$(echo "$WORKPORTS_RANGE" | cut -d ':' -f1)
 WORKPORT_END=$(echo "$WORKPORTS_RANGE" | cut -d ':' -f2)
@@ -20,6 +20,6 @@ for ((CONTAINER_COUNT=1;CONTAINER_COUNT<=CONTAINERS_AMOUNT;CONTAINER_COUNT++)); 
 	[[ $CURRENT_PORT -le $WORKPORT_END ]] || { echo "Container $CONTAINER_COUNT is out of range of available ports. Aborting execution"; exit 1; }
 	OCTET3=$(( $(echo "$INITIAL_IP" | cut -d '.' -f3) + $CONTAINER_COUNT ))
 	CURRENT_IP=$(echo "$INITIAL_IP" | sed "s/[0-9]\+\.\{1\}0$/$OCTET3\.0/" )
-	[[ $(docker container ls -a | grep "${CONTAINER_NAME}_${CONTAINER_COUNT}") ]] || docker run --cpus 0.5 --cap-add=NET_ADMIN --name="${CONTAINER_NAME}_${CONTAINER_COUNT}" -p $CURRENT_PORT:$CURRENT_PORT/tcp -p $CURRENT_PORT:$CURRENT_PORT/udp -td cellframevpn2:latest /launch_node.sh $CURRENT_PORT $CURRENT_IP 
+	[[ $(docker container ls -a | grep "${CONTAINER_NAME}_${CONTAINER_COUNT}") ]] || docker run --cpus 0.5 --cap-add=NET_ADMIN --name="${CONTAINER_NAME}_${CONTAINER_COUNT}" -p $CURRENT_PORT:$CURRENT_PORT/tcp -p $CURRENT_PORT:$CURRENT_PORT/udp -td cellframevpn:latest /launch_node.sh $CURRENT_PORT $CURRENT_IP 
 # -c "/launch_node.sh $CURRENT_PORT"
 done
