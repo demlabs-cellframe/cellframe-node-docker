@@ -2,6 +2,7 @@
 mkdir -p /dev/net
 mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
+/etc/init.d/bind9 start
 sed -i "s/8079/$1/g" /iptables_preset
 sed -i "s/10\.11\.12\.0/$2/g" /iptables_preset
 sed -i "s/8079/$1/g" /cellframe-node.cfg
