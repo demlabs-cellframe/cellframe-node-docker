@@ -2,13 +2,13 @@
 
 #/launch_node.sh $@ | tee -a /launch_node.log
 while true; do
-	oh=$(ps aux | grep cellframe-node | wc -l)
-	if [ "$oh" -ge "2" ]
+	is_running=$(ps aux | grep "bin\/cellframe-node")
+	if [ ! -z $is_running ]
 	then
 		echo "ok" 
         else
 		mkdir -p /errlogs/$( date +%d-%m-%Y )
-		cp /opt/cellframe-nod/var/log/cellframe-node.log /errlogs/$( date +%d-%m-%Y )/ 
+		cp /opt/cellframe-node/var/log/cellframe-node.log /errlogs/$( date +%d-%m-%Y )/ 
 		/opt/cellframe-node/bin/cellframe-node
 	fi
 sleep 10
